@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import ListUniversities from './ListUniversities';
-import Map from './Map'
+import Map from './Map';
+import Modal from './Modal';
+import ModalOverlay from './ModalOverlay';
 import escapeRegExp from 'escape-string-regexp'
 
 class App extends Component {
@@ -66,7 +68,8 @@ class App extends Component {
     ],
     query: [
 
-    ]
+    ],
+    isHidden: true//for modal
   }
 
 
@@ -81,6 +84,24 @@ class App extends Component {
     }))
   }
 
+  toggleHidden = () => {
+    this.setState({
+      isHidden: !this.state.isHidden
+    })
+  }
+
+  //   const styleVisible ={
+  //     display: 'block',
+  //     width:'50%',
+  //     position:'fixed'
+  //   }
+
+  //   const styleVisible ={
+  //     display: 'block',
+  //     width:'50%',
+  //     position:'fixed'
+  //   }
+
   render() {
     return (
         <Route exact path='/' render={() => (
@@ -89,11 +110,16 @@ class App extends Component {
             universities={this.state.universities}
             showinguniversities={this.state.showingUniversities}
             updateUniversities={this.updateUniversitiesList}
+            query={this.state.query}
+            showDetails={this.toggleHidden}
           />
             <Map
             universities={this.state.universities}
             showinguniversities={this.state.showingUniversities}
+            query={this.state.query}
             />
+            {!this.state.isHidden && <Modal/>}
+            {!this.state.isHidden && <ModalOverlay showDetails={this.toggleHidden}/>}
           </div>
         )}/>
     )

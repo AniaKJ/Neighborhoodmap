@@ -8,17 +8,21 @@ class ListUniversities extends Component {
   static propTypes = {
     universities: PropTypes.array.isRequired,
     showinguniversities: PropTypes.array.isRequired,
+    query: PropTypes.array.isRequired,
     updateUniversities: PropTypes.func.isRequired,
+    showDetails: PropTypes.func.isRequired,
   }
 
   render() {
     const { universities } = this.props
     let { showinguniversities} =this.props
+    let { query} =this.props
     const {updateUniversities}=this.props
+    const {showDetails}=this.props
 
     // showinguniversities.sort(sortBy('name'))
 
-    if (showinguniversities.length<1){
+    if (showinguniversities.length<1&&query.length<1){
       var shownuniversities=universities
     } else {
       shownuniversities=showinguniversities
@@ -40,7 +44,7 @@ class ListUniversities extends Component {
         <ol className='universities-list'>
 
           {shownuniversities.map((university) => (
-                <li key={university.id} className='universities-list-item'>
+                <li key={university.id} onClick={()=> showDetails()} className='universities-list-item'>
                 <div className='university-avatar' style={{
                   backgroundImage: `url(${university.avatarURL})`
                 }}/>

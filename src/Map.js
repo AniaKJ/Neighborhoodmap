@@ -8,10 +8,11 @@ export default class GoogleMap extends React.Component {
   }
 /*added by me*/
 
-static propTypes = {
-  universities: PropTypes.array.isRequired,
-  showinguniversities: PropTypes.array.isRequired,
-}
+  static propTypes = {
+    universities: PropTypes.array.isRequired,
+    showinguniversities: PropTypes.array.isRequired,
+    query: PropTypes.array.isRequired,
+  }
 
 
   componentDidMount() {
@@ -38,12 +39,13 @@ static propTypes = {
       // Markers added
       const { universities } = this.props;
       const { showinguniversities} = this.props;
+      const { query} = this.props;
       var largeInfowindow = new window.google.maps.InfoWindow();
       var bounds = new window.google.maps.LatLngBounds();
       var markers =[];
 
 
-      if (showinguniversities.length<1){
+      if (showinguniversities.length<1&&query.length<1){
         for (var i=0; i<universities.length; i++){
           console.log('first');
           console.log(universities.length);
@@ -86,9 +88,9 @@ static propTypes = {
     }
 
     function populateInfoWindow(marker, infowindow){
-      if (infowindow.marker !==marker){
+      if(infowindow.marker !==marker){
         infowindow.marker=marker;
-        infowindow.setContent('<div>'+marker.name+'</div>');
+        infowindow.setContent('<div>'+marker.title+'</div>');
         infowindow.open(map,marker);
         infowindow.addListener('closeclick',function(){
           infowindow.setMarker=null;
@@ -97,9 +99,15 @@ static propTypes = {
     }
   }
 
+
   render() {
+    const style ={
+      width:'100vw',
+      height: '100vh',
+      position:'absolute'
+    }
     return (
-      <div id="map"/>
+      <div id="map" style={style}/>
     );
   }
 }
