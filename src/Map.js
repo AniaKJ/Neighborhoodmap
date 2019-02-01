@@ -47,58 +47,73 @@ export default class GoogleMap extends React.Component {
 
       if (showinguniversities.length<1&&query.length<1){
         for (var i=0; i<universities.length; i++){
-          console.log('first');
-          console.log(universities.length);
-          console.log(showinguniversities.length);
           var uniname = universities[i].name;
           var unilocation = universities[i].location;
+
+          var uniaddress = universities[i].address;
+
           var marker = new window.google.maps.Marker({
             position: unilocation,
             map: map,
             title: uniname,
-            id:i
+            id:i,
+            animation: window.google.maps.Animation.DROP,
           });
           markers.push(marker);
           marker.addListener('click',function(){
-            populateInfoWindow(this,largeInfowindow);
+            populateInfoWindow(this,largeInfowindow, uniaddress);
+            toggleBounce(this);
           });
         }
       }
       else{
         console.log('second-first');
         for (var j=0; j<showinguniversities.length; j++){
-          console.log('second');
-          console.log(universities.length);
-          console.log(showinguniversities.length);
           var uniname2 = showinguniversities[j].name;
           var unilocation2 = showinguniversities[j].location;
+
+          var uniaddress2 = showinguniversities[j].address;
+
           var marker2 = new window.google.maps.Marker({
             position: unilocation2,
             map: map,
             title: uniname2,
-            id:j
+            id:j,
+            animation: window.google.maps.Animation.DROP,
           });
           markers.push(marker2);
           marker2.addListener('click',function(){
-            populateInfoWindow(this,largeInfowindow);
+            populateInfoWindow(this,largeInfowindow, uniaddress2);
+            toggleBounce(this);
           });
         }
-
       }
     }
 
-    function populateInfoWindow(marker, infowindow){
+    function populateInfoWindow(marker, infowindow, address){
       if(infowindow.marker !==marker){
         infowindow.marker=marker;
-        infowindow.setContent('<div>'+marker.title+'</div>');
+        infowindow.setContent('<div>'+marker.title+'</div>'+'<br>'+'<div>'+address+'</div>');
         infowindow.open(map,marker);
         infowindow.addListener('closeclick',function(){
           infowindow.setMarker=null;
+          toggleBounce(marker);
         })
       }
     }
-  }
 
+    function toggleBounce(marker) {
+      if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+      } else {
+        marker.setAnimation(window.google.maps.Animation.BOUNCE);
+      }
+    }
+
+    function removeBounce(){
+
+    }
+  }
 
   render() {
     const style ={

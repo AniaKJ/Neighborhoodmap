@@ -44,13 +44,10 @@ class ListUniversities extends Component {
         <ol className='universities-list'>
 
           {shownuniversities.map((university) => (
-                <li key={university.id} onClick={()=> showDetails()} className='universities-list-item'>
-                <div className='university-avatar' style={{
-                  backgroundImage: `url(${university.avatarURL})`
-                }}/>
+                <li key={university.id} onClick={()=>{this.props.showDetails(university)}}className='universities-list-item'>
                 <div className='university-details'>
                   <p>{university.name}</p>
-                  <p>{university.email}</p>
+                  <p>{university.address}</p>
                   </div>
                   </li>
               ))

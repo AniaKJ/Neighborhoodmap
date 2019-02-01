@@ -1,31 +1,16 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 
 class Modal extends Component {
-  // state = {
-  //   modalIsVisible: false,
-  // }
-  //
-  // changeState = ()=>{
-  //   this.setState({
-  //     modalIsVisible:true
-  //   });
-  // };
-  //
-  //   const styleVisible ={
-  //     display: 'block',
-  //     width:'50%',
-  //     position:'fixed'
-  //   }
 
-
-    //   modal = <div className='modal' style={styleVisible}>
-    //           <span>Name</span>
-    //           <p>Details</p>
-    //           </div>
-    //
-    // }
+  static propTypes = {
+    clickedUni: PropTypes.object.isRequired,
+    wiki: PropTypes.array.isRequired,
+  }
 
   render (){
+      const { clickedUni } = this.props;
+      const { wiki } = this.props;
       const style ={
         width:'50%',
         position:'fixed'
@@ -33,10 +18,12 @@ class Modal extends Component {
 
     return(
       <div className='modal' style={style}>
-              <span>Name</span>
-              <p>Details</p>
+              <span>{clickedUni.name}</span>
+              <p>{clickedUni.address}</p>
+              <p>{wiki}</p>
               </div>
     )
   }
 }
+
 export default Modal
