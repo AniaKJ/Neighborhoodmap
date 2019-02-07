@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import ListUniversities from './ListUniversities';
 import Map from './Map';
-import Modal from './Modal';
-import ModalOverlay from './ModalOverlay';
+// import Modal from './Modal';
+// import ModalOverlay from './ModalOverlay';
 import escapeRegExp from 'escape-string-regexp';
 import fetchJsonp from 'fetch-jsonp';
 
@@ -76,56 +76,18 @@ class App extends Component {
     ],
     data: [//data fetched from wiki
     ],
-    clickeduni: [//stores info about the clicked item on the list
-    ],
+    clickeduni: '',//stores name of the clicked item on the list or the marker
+    clickedunifull: [],//stores info about the clicked item on the list or the marker
     clickedWiki: [//stores wiki info about the clicked item on the list
     ],
     showingUniversities: [//stores info about the filtered items
     ],
-    query: [
-    ],
+    query: '',
+    isListHidden: true,//for universities list
     isHidden: true//for modal
   }
 
-
-  updateUniversitiesList = (query)=>{
-    this.setState({
-      query: query.trim()
-    })
-    const match = new RegExp(escapeRegExp(query), 'i')
-    this.setState((state)=>({
-      showingUniversities: state.universities.filter((university) => match.test(university.name))
-
-    }))
-  }
-
-  toggleHidden = () => {//this will update the state isHidden so that the modal can be visible
-    this.setState({
-      isHidden: !this.state.isHidden
-    });
-  }
-
-  handleClick = (e)=> {//this function will take the id of the clicked university from ListUniversities component
-    const clickedUniObj = e;
-    console.log(clickedUniObj);
-    this.setState({
-      clickeduni: clickedUniObj
-    });
-    this.toggleHidden();
-    this.takeWikiData();
-  }
-
-  updateData = (newData) => {//updates 'data' state with the data fetched from wiki
-    this.setState({
-      data:newData,
-    });
-  }
-
-  updateWiki = (wikiData) => {//upadates 'clikedWikiw' state with the wiki date for the clicked item on the list only
-    this.setState({
-      clickedWiki:wikiData,
-    });
-  }
+  //---function handling wiki getData
 
   componentDidMount(){//wiki data are fetched and passed to updateData method
     this.state.universities.map((location,index)=>{
@@ -139,58 +101,138 @@ class App extends Component {
     })
   }
 
-  takeWikiData =() => {
-    let getData = this.state.data.filter((single)=>this.state.clickeduni.name === single[0][0]).map(item2=>
-      {if (item2.length===0)
+  updateData = (newData) => {//updates 'data' state with the data fetched from wiki
+    this.setState({
+      data:newData,
+    });
+  }
+  //---function for handling the filter
+  updateUniversitiesList = (query)=>{
+
+    //this will remove the name of the last cliked university as a result if there was any open info window, it will be hidden
+    this.setState({
+      clickeduni: null
+    });
+
+    this.setState({
+      query: query.trim()
+    })
+    const match = new RegExp(escapeRegExp(query), 'i')
+    this.setState((state)=>({
+      showingUniversities: state.universities.filter((university) => match.test(university.name))
+
+    }))
+  }
+
+  //---functions for handling the click
+
+  handleClick = (e)=> {//this function will take the id of the clicked university from ListUniversities component
+
+    const clickedUniName = e;
+    console.log(clickedUniName);
+
+    if (clickedUniName!==''){
+      let getData = this.state.data.filter((single)=>clickedUniName === single[0][0]).map(item2=>//matches the clicke item with the data from wiki
+        {if (item2.length===0)
         return 'No Contents Have Been Found Try to Search Manually'
         else if (item2[1] !=='')
           return item2[1]
         else
           return 'No Contents Have Been Found Try to Search Manually'
-    })
-    this.updateWiki(getData)
+        })
+
+      // this.updateWiki(getData)
+      this.setState({
+      clickedWiki:getData,
+      });
+
+      this.setState({
+      clickeduni: clickedUniName
+      });
+
+      let clickedUniFull = this.state.universities.filter((university)=> university.name === clickedUniName)
+      let clickedUniAddress = clickedUniFull[0].address
+      this.setState({
+        clickedunifull: clickedUniAddress
+      })
+      console.log(clickedUniFull[0].address)
+
+      console.log(this.state.clickeduni);
+      // this.takeWikiData();
+      this.toggleHidden();
+    }
   }
 
+  handleMarkerClick = (e) =>{
+    console.log(e);
+  }
 
-  // handleWikiResponse = (data)=>{
-  //   this.setState({
-  //     wikiResponse: data
-  //   });
-  // }
+  // takeWikiData =() => {
+  //   let getData = this.state.data.filter((single)=>this.state.clickeduni.name === single[0][0]).map(item2=>//matches the clicke item with the data from wiki
+  //     {console.log('jestem tutaj');
+  //       if (item2.length===0)
+  //       return 'No Contents Have Been Found Try to Search Manually'
+  //       else if (item2[1] !=='')
+  //         return item2[1]
+  //       else
+  //         return 'No Contents Have Been Found Try to Search Manually'
+  //   })
   //
-  // getWikiInfo = () => {//makes XHR request to wiki API
-  //   const wikiRequest = new XMLHttpRequest();
-  //   wikiRequest.open('GET','https://en.wikipedia.org/w/api.php?action=parse&format=json&page=University_of_Wroc%C5%82aw&prop=text&section=0&origin=*');
-  //   let data
-  //   function handleSuccess(){
-  //     data = JSON.parse(this.responseText);
-  //     console.log (data)
-  //   }
+  //   // this.updateWiki(getData)
   //   this.setState({
-  //     wikiResponse: data
+  //     clickedWiki:getData,
   //   });
-  //   wikiRequest.onload = handleSuccess;
-  //   wikiRequest.send();
+  //
+  //   this.toggleHidden();
+  //
   // }
+
+  toggleHidden = () => {//this will update the state isHidden so that the modal can be visible
+    this.setState({
+      isHidden: !this.state.isHidden
+    });
+  }
+
+  // updateWiki = (wikiData) => {//upadates 'clikedWikiw' state with the wiki date for the clicked item on the list only
+  //   this.setState({
+  //     clickedWiki:wikiData,
+  //   });
+  // }
+
+  toggleList = () => {//shows ListUniversities when hamburger button clicked
+
+    //this will remove the name of the last cliked university as a result if there was any open info window, it will be hidden
+    this.setState({
+      clickeduni: null
+    });
+    this.setState({
+      isListHidden: !this.state.isListHidden
+    });
+  }
+
 
   render() {
     return (
         <Route exact path='/' render={() => (
           <div className="app_container">
-          <ListUniversities
+          <p className="navigation"><button onClick={()=>{this.toggleList()}}>&#9776;</button>Universities in Wrocław</p>
+          {!this.state.isListHidden && <ListUniversities
             universities={this.state.universities}
             showinguniversities={this.state.showingUniversities}
             updateUniversities={this.updateUniversitiesList}
             query={this.state.query}
             showDetails={this.handleClick}
-          />
+          />}
             <Map
             universities={this.state.universities}
             showinguniversities={this.state.showingUniversities}
             query={this.state.query}
+            clickedUni ={this.state.clickeduni}
+            clickedUniFull ={this.state.clickedunifull}
+            wiki ={this.state.clickedWiki}
+            data={this.state.data}
+            showDetails={this.handleClick}
             />
-            {!this.state.isHidden && <Modal clickedUni ={this.state.clickeduni} wiki ={this.state.clickedWiki}/>}
-            // {!this.state.isHidden && <ModalOverlay showDetails={this.toggleHidden}/>}
           </div>
         )}/>
     )

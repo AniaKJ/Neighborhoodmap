@@ -19,19 +19,65 @@ body, .app {
 
 /* .app{
   display:flex;
+}*/
+
+/*InfoWindow*/
+.gm-style-iw {
+  width: 200px !important;
+  min-height: 90px;
 }
 
+/* ListUniversities */
+
+.navigation{
+  background-color: #4169E1;
+  text-align: left;
+  margin:0;
+  padding:auto;
+  font-size: 30px;
+  postition:fixed;
+  top:0px;
+  width:100%;
+  height:10%;
+  z-index:999;
+}
+
+.navigation button{
+  background-color: #4169E1;
+  text-align: left;
+  margin:0;
+  padding:15px;
+  font-size: 30px;
+  border:none;
+}
 
 /* ListUniversities */
 
 .list-universities {
-  padding-top: 60px;
-  width:50%;/*added*/
-  position:relative;
+  padding-top: 0px;
+  width:30%;/*added*/
+  height:90%;
+  position:relative; /*absolute powoduje,że go nie widać*/
+  background-color:#eee;
+  z-index:2;
+  position:fixed;
 }
+
+.list-universities-transition {
+  opacity:0;
+  left:-15rem;
+}
+
+.list-universities-transition-active {
+  opacity:1;
+  left:0;
+  transition: ease-in-out 0.5s;
+}
+
+
 .list-universities-top {
-  position: fixed;
-  width: 50%;/*was 100%*/
+  position: relative;/*was fixed, changed so that the header can be visible*/
+  width: 100%;
   top: 0;
   border-bottom: 1px solid #d5d8df;
   display: flex;
@@ -39,11 +85,11 @@ body, .app {
 
 .search-universities {
   width: 100%;
-  padding: 20px 20px 20px 60px;
-  /* background-image: url('./icons/search.svg'); */
-  background-repeat: no-repeat;
-  background-position: 20px center;
-  background-size: 1.2em;
+  padding: 20px 20px 20px 20px;
+  /* background-position: 20px center;
+  background-size: 1.2em; */
+  background-color:#e6e6e6;
+  opacity: 0.7;
   font-size: 1.2em;
   border: 0;
   outline: none;
@@ -69,13 +115,13 @@ body, .app {
 }
 .universities-list-item {
   padding: 20px;
-  background: white;
+  background: #C0C0C0;
   display: flex;
 }
 
 @media (min-width: 600px) {
   .universities-list-item {
-    margin: 20px;
+    /* margin: 20px; */
     border: 1px solid #d5d8df;
     border-radius: 4px;
   }
@@ -112,7 +158,8 @@ body, .app {
 
 /* Map */
 #map {
-  height: 100%;
+  height: 90%;
+  position:relative;
 }
 
 /* Modal */

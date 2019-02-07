@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import escapeRegExp from 'escape-string-regexp'
 import sortBy from 'sort-by'
 
 class ListUniversities extends Component {
   static propTypes = {
     universities: PropTypes.array.isRequired,
     showinguniversities: PropTypes.array.isRequired,
-    query: PropTypes.array.isRequired,
+    query: PropTypes.string.isRequired,
     updateUniversities: PropTypes.func.isRequired,
     showDetails: PropTypes.func.isRequired,
   }
@@ -17,16 +15,18 @@ class ListUniversities extends Component {
     const { universities } = this.props
     let { showinguniversities} =this.props
     let { query} =this.props
-    const {updateUniversities}=this.props
-    const {showDetails}=this.props
+    // const {updateUniversities}=this.props
+    // const {showDetails}=this.props
 
-    // showinguniversities.sort(sortBy('name'))
+    let shownuniversities
 
     if (showinguniversities.length<1&&query.length<1){
-      var shownuniversities=universities
+      shownuniversities=universities
     } else {
       shownuniversities=showinguniversities
     }
+
+    shownuniversities.sort(sortBy('name'))
 
     return (
       <div className='list-universities'>
@@ -44,7 +44,7 @@ class ListUniversities extends Component {
         <ol className='universities-list'>
 
           {shownuniversities.map((university) => (
-                <li key={university.id} onClick={()=>{this.props.showDetails(university)}}className='universities-list-item'>
+                <li key={university.id} onClick={()=>{this.props.showDetails(university.name)}} className='universities-list-item'>
                 <div className='university-details'>
                   <p>{university.name}</p>
                   <p>{university.address}</p>
@@ -58,6 +58,5 @@ class ListUniversities extends Component {
     )
   }
 }
-
 
 export default ListUniversities

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 class Modal extends Component {
 
   static propTypes = {
-    clickedUni: PropTypes.object.isRequired,
+    clickedUni: PropTypes.string.isRequired,
     wiki: PropTypes.array.isRequired,
   }
 
@@ -18,8 +18,7 @@ class Modal extends Component {
 
     return(
       <div className='modal' style={style}>
-              <span>{clickedUni.name}</span>
-              <p>{clickedUni.address}</p>
+              <span>{clickedUni}</span>
               <p>{wiki}</p>
               </div>
     )
