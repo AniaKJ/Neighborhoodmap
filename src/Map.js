@@ -98,10 +98,19 @@ export default class GoogleMap extends React.Component {
     function markerClickListener(marker){//adds event listener to a marker
       marker.addListener('click',function(){
 
+        var name = marker.title;
+        updateClickedMarkerName(name);
+
         removeAllBounce();//removes bounce from all markers
         populateInfoWindow(this,largeInfowindow);
         addBounce(this);//makes the cliked marker bounce
       })
+    }
+
+    function updateClickedMarkerName (name){
+      this.setState({
+        clickedMarkerName:name,
+      });
     }
 
     function populateInfoWindow(marker, infowindow, address){
