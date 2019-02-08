@@ -77,7 +77,7 @@ class App extends Component {
     data: [//data fetched from wiki
     ],
     clickeduni: '',//stores name of the clicked item on the list or the marker
-    clickedunifull: [],//stores info about the clicked item on the list or the marker
+    clickedunifull: '',//stores info about the clicked item on the list or the marker
     clickedWiki: [//stores wiki info about the clicked item on the list
     ],
     showingUniversities: [//stores info about the filtered items
@@ -151,6 +151,7 @@ class App extends Component {
       });
 
       let clickedUniFull = this.state.universities.filter((university)=> university.name === clickedUniName)
+      console.log(clickedUniFull);
       let clickedUniAddress = clickedUniFull[0].address
       this.setState({
         clickedunifull: clickedUniAddress
@@ -166,26 +167,6 @@ class App extends Component {
   handleMarkerClick = (e) =>{
     console.log(e);
   }
-
-  // takeWikiData =() => {
-  //   let getData = this.state.data.filter((single)=>this.state.clickeduni.name === single[0][0]).map(item2=>//matches the clicke item with the data from wiki
-  //     {console.log('jestem tutaj');
-  //       if (item2.length===0)
-  //       return 'No Contents Have Been Found Try to Search Manually'
-  //       else if (item2[1] !=='')
-  //         return item2[1]
-  //       else
-  //         return 'No Contents Have Been Found Try to Search Manually'
-  //   })
-  //
-  //   // this.updateWiki(getData)
-  //   this.setState({
-  //     clickedWiki:getData,
-  //   });
-  //
-  //   this.toggleHidden();
-  //
-  // }
 
   toggleHidden = () => {//this will update the state isHidden so that the modal can be visible
     this.setState({
@@ -203,13 +184,12 @@ class App extends Component {
 
     //this will remove the name of the last cliked university as a result if there was any open info window, it will be hidden
     this.setState({
-      clickeduni: null
+      clickeduni: ''
     });
     this.setState({
       isListHidden: !this.state.isListHidden
     });
   }
-
 
   render() {
     return (

@@ -5,6 +5,7 @@ export default class GoogleMap extends React.Component {
 
   state = {
     mapIsReady: false,
+    clickedMarkerName:'',
   }
 
   static propTypes = {
@@ -12,7 +13,7 @@ export default class GoogleMap extends React.Component {
     showinguniversities: PropTypes.array.isRequired,
     query: PropTypes.string.isRequired,
     clickedUni: PropTypes.string.isRequired,
-    clickedUniFull: PropTypes.array.isRequired,
+    clickedUniFull: PropTypes.string.isRequired,
     wiki: PropTypes.array.isRequired,
     showDetails: PropTypes.func.isRequired,
   }
@@ -31,8 +32,8 @@ export default class GoogleMap extends React.Component {
   }
 
   componentDidUpdate() {
-      const { clickedUniFull } = this.props;
-      const { wiki } = this.props;
+    const { clickedUniFull } = this.props;
+    const { wiki } = this.props;
 
     if (this.state.mapIsReady) {
       // Display the map
@@ -86,68 +87,19 @@ export default class GoogleMap extends React.Component {
         markers.push(marker);//mark added to the arrawy with all markers
       }
 
-
-
       for (var l=0; l<markers.length; l++){//the clicked location on the list will bounce on the map & infowindow will be opened
         if(markers[l].title === clickedUni){
           markers[l].setAnimation(window.google.maps.Animation.BOUNCE);
           populateInfoWindow(markers[l],largeInfowindow);
         }
       }
-
-
-      // if (showinguniversities.length<1&&query.length<1){
-      //   for (var i=0; i<universities.length; i++){
-      //     var uniname = universities[i].name;
-      //     var unilocation = universities[i].location;
-      //
-      //     var uniaddress = universities[i].address;
-      //
-      //     var marker = new window.google.maps.Marker({
-      //       position: unilocation,
-      //       map: map,
-      //       title: uniname,
-      //       id:i,
-      //       animation: window.google.maps.Animation.DROP,
-      //     });
-      //     markers.push(marker);
-      //     marker.addListener('click',function(){
-      //       populateInfoWindow(this,largeInfowindow, uniaddress);
-      //       toggleBounce(this);
-      //       // addBounce(this);
-      //     });
-      //   }
-      // }
-      // else{
-      //   console.log('second-first');
-      //   for (var j=0; j<showinguniversities.length; j++){
-      //     var uniname2 = showinguniversities[j].name;
-      //     var unilocation2 = showinguniversities[j].location;
-      //
-      //     var uniaddress2 = showinguniversities[j].address;
-      //
-      //     var marker2 = new window.google.maps.Marker({
-      //       position: unilocation2,
-      //       map: map,
-      //       title: uniname2,
-      //       id:j,
-      //       animation: window.google.maps.Animation.DROP,
-      //     });
-      //     markers.push(marker2);
-      //     marker2.addListener('click',function(){
-      //       populateInfoWindow(this,largeInfowindow, uniaddress2);
-      //       toggleBounce(this);
-      //       // addBounce(this);
-      //     });
-      //   }
-      // }
     }
 
     function markerClickListener(marker){//adds event listener to a marker
       marker.addListener('click',function(){
+
         removeAllBounce();//removes bounce from all markers
         populateInfoWindow(this,largeInfowindow);
-        // toggleBounce(this);
         addBounce(this);//makes the cliked marker bounce
       })
     }
@@ -155,24 +107,15 @@ export default class GoogleMap extends React.Component {
     function populateInfoWindow(marker, infowindow, address){
       // if(infowindow.marker !==marker){//ten warunek powodował, że przy drugim kliknięciu nie otwierał sie infowindow
         infowindow.marker=marker;
-        infowindow.setContent('<div style="font-size:18px"><strong>'+marker.title+'</strong></div><div>'+ clickedUniFull+'</div><div>'+wiki+'</div>');
+        infowindow.setContent('<div style="font-size:18px; text-aligh:center"><strong>'+marker.title+'</strong></div><div>'+ clickedUniFull+'</div><div>'+wiki+'</div>');
         // infowindow.setContent('<div style="font-size:18px"><strong>'+marker.title+'</strong></div><div>'+ address+'</div>'+marker.customInfo);
         infowindow.open(map,marker);
         infowindow.addListener('closeclick',function(){
           infowindow.setMarker=null; //co to robi?
           removeBounce(marker);
-          // toggleBounce(marker);
         })
       // }
     }
-
-    // function toggleBounce(marker) {
-    //   if (marker.getAnimation() !== null) {
-    //     marker.setAnimation(null);
-    //   } else {
-    //     marker.setAnimation(window.google.maps.Animation.BOUNCE);
-    //   }
-    // }
 
     function removeAllBounce(){//removes bounce from all markers
       for (var k=0; k<uniMarked.length; k++){
@@ -192,7 +135,7 @@ export default class GoogleMap extends React.Component {
   render() {
     const style ={
       width:'100vw',
-      height: '90%',
+      height: '100%',
       position:'absolute'
     }
     return (
