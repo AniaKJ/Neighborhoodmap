@@ -197,6 +197,13 @@ class App extends Component {
     this.setState({
       clickeduni: ''
     });
+
+    //this will reset the list of the univerities displayed
+    this.setState({
+      showingUniversities: this.state.universities
+    });
+
+    // this.updateUniversitiesList(this.state.query);
     this.setState({
       isListHidden: !this.state.isListHidden
     });
