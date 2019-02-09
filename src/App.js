@@ -124,12 +124,25 @@ class App extends Component {
     }))
   }
 
-  //---functions for handling the click
+  //--->functions for handling the click of the university name on the liste or of the marker
 
-  handleClick = (e)=> {//this function will take the id of the clicked university from ListUniversities component
+  handleClick = (e)=> {//'e' may be 'university.name' if the item is clicked on the list, 'e' may be a <div> if the item is clicked on the map (desktop) or <for mobile devices> 'e' may be an image with the parent <div> that we get on the desktop
 
-    const clickedUniName = e;
-    console.log(clickedUniName);
+
+    const clickedUni = e;
+    let clickedUniName='';
+
+    //here I test what 'e' and perform necessary operation to get the name of the clicked university
+    if (clickedUni.nodeName==='IMG'){//when marker clicked on mobile device
+      clickedUniName = clickedUni.parentElement.title;
+      console.log('con1');
+    }else if (clickedUni.nodeName==='AREA'){//when marker clicked on desktop
+        clickedUniName = clickedUni.title;
+        console.log('con2');
+    }else if (typeof e === 'string') {//when university clicked on the list
+        clickedUniName = e;
+        console.log('con3');
+    }
 
     if (clickedUniName!==''){
       let getData = this.state.data.filter((single)=>clickedUniName === single[0][0]).map(item2=>//matches the clicke item with the data from wiki
@@ -143,12 +156,15 @@ class App extends Component {
 
       // this.updateWiki(getData)
       this.setState({
-      clickedWiki:getData,
+      clickedWiki:getData,//dane wiki
       });
+      console.log('This is clickedwiki:'+this.state.clickedwiki);
 
       this.setState({
-      clickeduni: clickedUniName
+      clickeduni: clickedUniName//nazwa uniwesytetu
       });
+      console.log('This is clikeduni'+this.state.clickeduni);
+
 
       let clickedUniFull = this.state.universities.filter((university)=> university.name === clickedUniName)
       console.log(clickedUniFull);
@@ -156,16 +172,11 @@ class App extends Component {
       this.setState({
         clickedunifull: clickedUniAddress
       })
-      console.log(clickedUniFull[0].address)
+      console.log('This is clickedUNiFull'+clickedUniFull[0].address);
 
-      console.log(this.state.clickeduni);
       // this.takeWikiData();
       this.toggleHidden();
     }
-  }
-
-  handleMarkerClick = (e) =>{
-    console.log(e);
   }
 
   toggleHidden = () => {//this will update the state isHidden so that the modal can be visible

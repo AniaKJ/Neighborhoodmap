@@ -5,7 +5,6 @@ export default class GoogleMap extends React.Component {
 
   state = {
     mapIsReady: false,
-    clickedMarkerName:'',
   }
 
   static propTypes = {
@@ -32,6 +31,8 @@ export default class GoogleMap extends React.Component {
   }
 
   componentDidUpdate() {
+    let currentComponent = this;//needed for state update in function 'updateClickedMarkerName'
+
     const { clickedUniFull } = this.props;
     const { wiki } = this.props;
 
@@ -87,7 +88,7 @@ export default class GoogleMap extends React.Component {
         markers.push(marker);//mark added to the arrawy with all markers
       }
 
-      for (var l=0; l<markers.length; l++){//the clicked location on the list will bounce on the map & infowindow will be opened
+      for (var l=0; l<markers.length; l++){//the clicked location on the list or map will bounce on the map & infowindow will be opened
         if(markers[l].title === clickedUni){
           markers[l].setAnimation(window.google.maps.Animation.BOUNCE);
           populateInfoWindow(markers[l],largeInfowindow);
@@ -97,20 +98,12 @@ export default class GoogleMap extends React.Component {
 
     function markerClickListener(marker){//adds event listener to a marker
       marker.addListener('click',function(){
-
+        //
         var name = marker.title;
-        updateClickedMarkerName(name);
-
         removeAllBounce();//removes bounce from all markers
-        populateInfoWindow(this,largeInfowindow);
+        populateInfoWindow(marker,largeInfowindow);
         addBounce(this);//makes the cliked marker bounce
       })
-    }
-
-    function updateClickedMarkerName (name){
-      this.setState({
-        clickedMarkerName:name,
-      });
     }
 
     function populateInfoWindow(marker, infowindow, address){
@@ -147,8 +140,9 @@ export default class GoogleMap extends React.Component {
       height: '100%',
       position:'absolute'
     }
+    let markerName = this.state.clickedMarkerName;
     return (
-      <div id="map" onClick={(event)=>{this.props.showDetails(event.target.title)}} style={style}/>
+      <div id="map" onClick={(event)=>{this.props.showDetails(event.target)}} style={style}/>
     );
   }
 }
